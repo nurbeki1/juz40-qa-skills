@@ -23,24 +23,40 @@ description: >
 
 ---
 
-## 0-қадам: авторизация (МІНДЕТТІ, өткізіп жіберуге болмайды)
+## 0-қадам: ортаны өзің тексер (МІНДЕТТІ)
+
+Пайдаланушыдан жол немесе токен сұрамай, алдымен **өзің** анықта. Бұл скрипт
+репозиторийлерді іздеп табады, не жетіспейтінін айтады және режимді шешеді:
 
 ```bash
-npm --prefix "$AGENT_ORCHESTRATOR_PATH" run auth:check
-# күмән болса немесе токен ескірген сияқты болса:
-npm --prefix "$AGENT_ORCHESTRATOR_PATH" run auth:check -- --probe
+bash "$CLAUDE_PLUGIN_ROOT/scripts/preflight.sh"
 ```
 
-- `AUTH_STATUS: READY` → жалғастыр.
-- `AUTH_STATUS: BLOCKED` → **ТОҚТА.** Шығыстағы `→` жолын пайдаланушыға
-  көрсет те, кіруін сұра. Браузер логинін мен істей алмаймын — адам `/mcp`
-  арқылы немесе `.env` арқылы өзі кіреді. Кіргеннен кейін қайта іске қос.
-- Жартылай деректермен жалғастыруға, жоқ дереккөзді болжаумен алмастыруға ТЫЙЫМ.
+`$CLAUDE_PLUGIN_ROOT` бос болса — осы skill қалтасындағы `scripts/preflight.sh`-ты
+іске қос, немесе инлайн нұсқасын қолдан:
 
-Толығырақ (қай интеграция кімнің атынан жазады, MCP vs токен):
+```bash
+ORCH="${AGENT_ORCHESTRATOR_PATH:-$(find "$HOME" -maxdepth 4 -name package.json \
+  -path '*juz40-aqa-agent007*' -not -path '*/node_modules/*' -print -quit 2>/dev/null | xargs -r dirname)}"
+echo "orchestrator: ${ORCH:-ТАБЫЛМАДЫ}"
+[ -n "$ORCH" ] && npm --prefix "$ORCH" run auth:check -- --probe
+```
+
+### Режимге қарай әрекет
+
+| MODE | Мағынасы | Әрекет |
+|---|---|---|
+| `FULL` (exit 0) | екі репо + токен дайын | процедураны баста |
+| `SETUP` (exit 2) | репо бар, `npm ci` / `.env` / токен жетіспейді | скрипт берген командаларды пайдаланушыға ұсын, кіруін сұра, қайта тексер |
+| `TESTS_ONLY` (exit 3) | орkестратор репосы жоқ | [references/bootstrap.md](references/bootstrap.md) — шектеулі режим, gate жоқ |
+| `BOOTSTRAP` (exit 4) | ештеңе табылмады | клондауға нақты нұсқау бер, сосын қайта тексер |
+
+**Қатаң ереже:** `TESTS_ONLY` режимінде орындалған жұмысты «тексерілді» деп
+жариялауға тыйым — gate өтпеген. Нені істегеніңді және нені істей алмағаныңды
+ашық айт.
+
+Авторизация детальдары (кім кімнің атынан жазады, MCP vs токен):
 [references/auth.md](references/auth.md)
-
----
 
 ## 1-қадам: қай процедура керек
 
@@ -56,6 +72,7 @@ npm --prefix "$AGENT_ORCHESTRATOR_PATH" run auth:check -- --probe
 | «Препрод сынды», «аккаунт кірмейді», тест ортадан құлап жатыр | [references/env-readiness.md](references/env-readiness.md) |
 | Кезекшілік/дейлик есебі, релиз снапшоты | [references/duty-report.md](references/duty-report.md) |
 | Кез келген тексеруден бұрын факт керек | [references/grounding.md](references/grounding.md) |
+| Репо/токен жетіспейді, режим шекарасы | [references/bootstrap.md](references/bootstrap.md) |
 
 **Grounding — бәрінің астындағы базалық қадам.** Тест-кейс жазу, автотест жазу
 және триаж оны оқымай басталмайды.
@@ -86,16 +103,8 @@ npm --prefix "$AGENT_ORCHESTRATOR_PATH" run auth:check -- --probe
 
 ## Ортақ орнату
 
-Екі жолды бір рет орнат (shell профиліне қосуға болады):
-
-```bash
-# Агент репосының клоны — gate командалары осы жерден шақырылады
-export AGENT_ORCHESTRATOR_PATH="<juz40-aqa-agent007 жолы>"
-# Playwright тест репосының клоны
-export TEST_REPO_PATH="<juz40-aqa-repo жолы>"
-```
-
-Орнатылмаған болса — пайдаланушыдан сұра, болжамай.
+Жолдарды 0-қадамдағы preflight өзі табады да, `export` жолдарын дайын күйде
+береді. Қолмен сұрайтын жағдай жоқ.
 
 Команда шаблоны (қай жерде тұрсаң да жұмыс істейді):
 
@@ -104,8 +113,6 @@ npm --prefix "$AGENT_ORCHESTRATOR_PATH" run <script> -- DV-XXXX
 ```
 
 Grounding клондарының метадеректерін жаңарту: `npm run sync-context`.
-
----
 
 ## Нәтижені қалай хабарлау
 

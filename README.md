@@ -28,31 +28,41 @@ Juz40 QA/AQA процедураларының Claude Code plugin-і. Agent 007 �
 
 ## Орнату
 
+Claude Code терминалында екі команда:
+
 ```
 /plugin marketplace add nurbeki1/juz40-qa-skills
 /plugin install juz40-qa@juz40-qa
 ```
 
-Репо **private** — сондықтан орнатар алдында GitHub-қа кіру керек
-(`gh auth login` немесе SSH кілт) және репоға рұқсат берілуі керек.
+Болды — логин де, токен де, клон да керек емес. Тексеру: `/plugin list`.
+
+Жаңартуға: `/plugin update juz40-qa`.
+
+Қалай жұмыс істейтінін көрнекі түсіндіру (диаграммалармен):
+[docs/how-it-works.html](docs/how-it-works.html) · [онлайн нұсқасы](https://claude.ai/code/artifact/4062e86a-c5e3-430a-a417-87a1d8d711d8)
 
 ## Жұмысқа дайындық
 
-1. Екі репоны клонда: `juz40-aqa-agent007` (орkестратор) және
-   `juz40-aqa-repo` (Playwright тесттері).
-2. Жолдарды орнат:
-   ```bash
-   export AGENT_ORCHESTRATOR_PATH="<juz40-aqa-agent007 жолы>"
-   export TEST_REPO_PATH="<juz40-aqa-repo жолы>"
-   ```
-3. Орkестратор репосында `.env` толтыр (`references/auth.md` бойынша —
-   **өз токендеріңмен**, сервис токенімен емес).
-4. Тексер:
-   ```bash
-   npm --prefix "$AGENT_ORCHESTRATOR_PATH" run auth:check -- --probe
-   ```
-   `AUTH_STATUS: READY` шықпаса — skill жұмысты бастамайды, қай токен
-   жетіспейтінін айтады.
+Қолмен жол орнату, README оқу керек емес — skill қосылған бойда ортаны **өзі
+тексереді**:
+
+```bash
+bash "$CLAUDE_PLUGIN_ROOT/scripts/preflight.sh"
+```
+
+Скрипт репозиторийлерді іздеп табады, не жетіспейтінін айтады және режимді
+шешеді:
+
+| MODE | Мағынасы | Не болады |
+|---|---|---|
+| `FULL` | екі репо + токен дайын | барлық 11 процедура ашық |
+| `SETUP` | репо бар, `npm ci` / `.env` жетіспейді | дайын командалар беріледі |
+| `TESTS_ONLY` | орkестратор репосы жоқ | тест жазу/жүгірту бар, **gate жоқ** — нәтиже «тексерілді» деп жарияланмайды |
+| `BOOTSTRAP` | жаңа машина | клондау нұсқауы |
+
+Режим шекаралары: `references/bootstrap.md`. Токен/авторизация: `references/auth.md`
+(өз токеніңмен — сервис токенімен емес).
 
 ## Қолдану
 

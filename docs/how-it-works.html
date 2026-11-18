@@ -1,0 +1,931 @@
+<title>Juz40 QA Skill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #f1f4f5;
+    --surface: #ffffff;
+    --surface-2: #e8eef0;
+    --ink: #16242b;
+    --muted: #596a71;
+    --line: #ccd9dd;
+    --line-soft: #e0e8ea;
+    --accent: #0f6e6e;
+    --accent-soft: #d8e9e7;
+    --pass: #2f7d4f;
+    --block: #9d6318;
+    --fail: #a3362e;
+
+    --serif: 'Noto Serif', Georgia, serif;
+    --sans: 'IBM Plex Sans', 'Noto Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0e1518;
+      --surface: #162126;
+      --surface-2: #1c2a2f;
+      --ink: #e4eced;
+      --muted: #9db0b6;
+      --line: #2a3a40;
+      --line-soft: #223036;
+      --accent: #53c5be;
+      --accent-soft: #15322f;
+      --pass: #64b983;
+      --block: #d8a35d;
+      --fail: #e18c83;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0e1518;
+    --surface: #162126;
+    --surface-2: #1c2a2f;
+    --ink: #e4eced;
+    --muted: #9db0b6;
+    --line: #2a3a40;
+    --line-soft: #223036;
+    --accent: #53c5be;
+    --accent-soft: #15322f;
+    --pass: #64b983;
+    --block: #d8a35d;
+    --fail: #e18c83;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+  .layout { display: block; }
+  @media (min-width: 1180px) {
+    .layout { display: grid; grid-template-columns: 1fr 208px; gap: 56px; align-items: start; }
+  }
+  p, li { max-width: 68ch; }
+
+  /* ---- masthead ---- */
+  header.masthead {
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+    text-wrap: balance;
+    max-width: 24ch;
+  }
+  .standfirst {
+    font-size: 1.14rem;
+    color: var(--muted);
+    margin: 0 0 28px;
+    max-width: 62ch;
+  }
+  .masthead-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    padding-top: 8px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .masthead-meta b { color: var(--ink); font-weight: 500; }
+
+  /* ---- nav ---- */
+  nav.toc { font-size: 14px; }
+  @media (min-width: 1180px) {
+    nav.toc { position: sticky; top: 32px; }
+  }
+  nav.toc h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  nav.toc a { color: var(--muted); text-decoration: none; border-left: 2px solid var(--line); padding-left: 12px; display: block; }
+  nav.toc a:hover { color: var(--accent); border-color: var(--accent); }
+  @media (max-width: 1179px) {
+    nav.toc { margin-bottom: 56px; padding: 22px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; }
+    nav.toc ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 24px; }
+    nav.toc li { max-width: none; }
+  }
+
+  /* ---- sections ---- */
+  section { margin-bottom: 72px; scroll-margin-top: 24px; }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  h2 .num {
+    font-family: var(--mono);
+    font-size: 0.6em;
+    font-weight: 400;
+    color: var(--accent);
+    margin-right: 12px;
+    letter-spacing: 0.04em;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.04rem;
+    margin: 36px 0 10px;
+    letter-spacing: 0.002em;
+  }
+  .lede { color: var(--muted); margin: 0 0 28px; max-width: 64ch; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--surface-2);
+    padding: 0.12em 0.36em;
+    border-radius: 2px;
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.7;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  pre .cm { color: var(--muted); }
+
+  /* ---- figures ---- */
+  figure {
+    margin: 32px 0;
+    padding: 24px 20px 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow-x: auto;
+  }
+  figure svg { display: block; max-width: 100%; height: auto; margin: 0 auto; color: var(--ink); }
+  figcaption {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    max-width: 70ch;
+  }
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* svg helpers */
+  .sv-box { fill: none; stroke: currentColor; stroke-width: 1.2; }
+  .sv-fill { fill: var(--surface-2); stroke: var(--line); stroke-width: 1; }
+  .sv-acc { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+  .sv-accfill { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.3; }
+  .sv-dash { fill: none; stroke: currentColor; stroke-width: 1.1; stroke-dasharray: 5 4; opacity: 0.55; }
+  .sv-t { font-family: var(--sans); font-size: 12.5px; fill: currentColor; }
+  .sv-tb { font-family: var(--sans); font-size: 13px; font-weight: 600; fill: currentColor; }
+  .sv-tm { font-family: var(--mono); font-size: 11.5px; fill: var(--muted); }
+  .sv-ta { font-family: var(--mono); font-size: 11.5px; fill: var(--accent); }
+  .sv-line { stroke: currentColor; stroke-width: 1.2; fill: none; }
+  .sv-aline { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+
+  /* ---- tables ---- */
+  .tablewrap { overflow-x: auto; margin: 24px 0; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  td code { font-size: 0.85em; }
+  td p { margin: 0; max-width: none; }
+
+  /* ---- callouts ---- */
+  .rule-list { list-style: none; padding: 0; margin: 24px 0; counter-reset: r; display: grid; gap: 1px; background: var(--line-soft); border: 1px solid var(--line); border-radius: 3px; }
+  .rule-list li {
+    counter-increment: r;
+    background: var(--surface);
+    padding: 14px 18px 14px 52px;
+    position: relative;
+    max-width: none;
+    font-size: 15.5px;
+  }
+  .rule-list li::before {
+    content: counter(r);
+    position: absolute;
+    left: 18px;
+    top: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .rule-list b { font-weight: 600; }
+
+  .guard {
+    border: 1px solid var(--fail);
+    border-left-width: 3px;
+    background: var(--surface);
+    padding: 18px 20px;
+    border-radius: 2px;
+    margin: 28px 0;
+  }
+  .guard .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fail);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .guard p { margin: 0; }
+
+  .steps { list-style: none; padding: 0; margin: 28px 0; display: grid; gap: 14px; counter-reset: s; }
+  .steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 14px;
+    align-items: start;
+    max-width: 72ch;
+  }
+  .steps li::before {
+    content: "0" counter(s);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    padding-top: 3px;
+  }
+  .steps b { font-weight: 600; }
+  .steps small { display: block; color: var(--muted); font-size: 14px; }
+
+  .verdict { font-family: var(--mono); font-size: 0.86em; padding: 0.1em 0.4em; border-radius: 2px; white-space: nowrap; }
+  .v-pass { color: var(--pass); border: 1px solid var(--pass); }
+  .v-block { color: var(--block); border: 1px solid var(--block); }
+  .v-fail { color: var(--fail); border: 1px solid var(--fail); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer a { color: var(--accent); }
+  a:focus-visible, nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Claude Code plugin · juz40-qa</p>
+  <h1>Агенттің жұмысы — QA инженердің қолында</h1>
+  <p class="standfirst">Agent 007 автономды орындайтын QA/AQA жұмысы енді skill ретінде қолжетімді.
+  Сапаны тексеретін gate-тер өзгермеді — олар бұрынғыдай детерминды код. Өзгергені: шешімді
+  cron емес, адам бастайды.</p>
+  <div class="masthead-meta">
+    <span><b>11</b> процедура</span>
+    <span><b>23</b> команда</span>
+    <span>нұсқа <b>0.1.0</b></span>
+    <span>дереккөз <b>juz40-aqa-agent007</b></span>
+  </div>
+</header>
+
+<div class="layout">
+<main>
+
+<section id="s1">
+  <h2><span class="num">01</span>Бұл не және неге керек</h2>
+  <p class="lede">Агент тәулік бойы Jira-ны сканерлеп, өзі кандидат тауып, өзі жазады. Бұл күшті,
+  бірақ QA инженерге басқа нәрсе керек: «мынау фичаны қазір тексеруім керек».</p>
+
+  <p>Skill дәл осы айырманы жабады. Агенттің білімі — grounding әдістемесі, тест-кейс техникалары,
+  триаж таксономиясы, баг контракты, completion шарттары — процедура ретінде жазылған. Сіз DV кілтін
+  айтасыз, қалғанын процедура жүргізеді.</p>
+
+  <p>Ең маңыздысы: <b>сапа тексерісі қайта жазылмады</b>. Coverage, oracle, test-data, independence
+  және evidence gate-тері сол Node кодында қалды. Skill оларды шақырады да, нәтижесіне бағынады.
+  Сондықтан адам арқылы жүрген жұмыс агент арқылы жүрген жұмыстан нашар болмайды.</p>
+</section>
+
+<section id="s2">
+  <h2><span class="num">02</span>Екі драйвер, бір gate қабаты</h2>
+  <p class="lede">Агент пен skill — бір жүйенің екі кіру нүктесі. Айырмасы: жұмысты кім бастайды.</p>
+
+  <figure>
+    <svg viewBox="0 0 920 428" role="img" aria-label="Агент пен skill бір детерминды gate қабаты арқылы жұмыс істейді: екі драйвер, ортақ тексеріс, сыртқа жазу тек renderer арқылы">
+      <defs>
+        <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="currentColor"></polygon>
+        </marker>
+        <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon>
+        </marker>
+      </defs>
+
+      <text class="sv-tm" x="20" y="24">ДРАЙВЕР</text>
+      <text class="sv-tm" x="330" y="24">ДЕТЕРМИНДЫ ҚАБАТ · LLM-сіз</text>
+      <text class="sv-tm" x="742" y="24">СЫРТҚЫ ЖАЗУ</text>
+
+      <!-- driver A: human + skill -->
+      <rect class="sv-accfill" x="20" y="44" width="238" height="96" rx="2"></rect>
+      <text class="sv-tb" x="38" y="72">Адам · QA инженер</text>
+      <text class="sv-t" x="38" y="94">«DV-5877-ні тексер»</text>
+      <text class="sv-ta" x="38" y="122">skill: juz40-qa</text>
+
+      <!-- driver B: agent -->
+      <rect class="sv-fill" x="20" y="186" width="238" height="112" rx="2"></rect>
+      <text class="sv-tb" x="38" y="214">Агент · cron</text>
+      <text class="sv-t" x="38" y="236">watch · observer · dedup</text>
+      <text class="sv-t" x="38" y="256">cooldown · model routing</text>
+      <text class="sv-tm" x="38" y="280">тәулік бойы, өзі табады</text>
+
+      <!-- gate layer -->
+      <rect class="sv-box" x="330" y="44" width="324" height="300" rx="2"></rect>
+      <rect class="sv-fill" x="352" y="68" width="280" height="38" rx="2"></rect>
+      <text class="sv-t" x="368" y="92">coverage · AST трассировка</text>
+      <rect class="sv-fill" x="352" y="116" width="280" height="38" rx="2"></rect>
+      <text class="sv-t" x="368" y="140">oracle · test-data сапасы</text>
+      <rect class="sv-fill" x="352" y="164" width="280" height="38" rx="2"></rect>
+      <text class="sv-t" x="368" y="188">independence профильдері</text>
+      <rect class="sv-fill" x="352" y="212" width="280" height="38" rx="2"></rect>
+      <text class="sv-t" x="368" y="236">runtime evidence · TTL 120 мин</text>
+      <rect class="sv-fill" x="352" y="260" width="280" height="38" rx="2"></rect>
+      <text class="sv-t" x="368" y="284">completion gate · 9 шарт</text>
+      <text class="sv-tm" x="352" y="326">renderer: артефактты валидациялап жазады</text>
+
+      <!-- external -->
+      <rect class="sv-box" x="726" y="44" width="174" height="60" rx="2"></rect>
+      <text class="sv-t" x="744" y="72">Jira · Confluence</text>
+      <text class="sv-tm" x="744" y="90">subtask · кейс парағы</text>
+      <rect class="sv-box" x="726" y="122" width="174" height="60" rx="2"></rect>
+      <text class="sv-t" x="744" y="150">GitLab</text>
+      <text class="sv-tm" x="744" y="168">branch · Draft MR</text>
+      <rect class="sv-box" x="726" y="200" width="174" height="60" rx="2"></rect>
+      <text class="sv-t" x="744" y="228">Allure</text>
+      <text class="sv-tm" x="744" y="246">run + latest URL</text>
+
+      <!-- arrows in -->
+      <line class="sv-aline" x1="258" y1="92" x2="322" y2="150" marker-end="url(#a2)"></line>
+      <text class="sv-ta" x="250" y="134">npm run …</text>
+      <line class="sv-line" x1="258" y1="242" x2="322" y2="214" marker-end="url(#a1)"></line>
+      <text class="sv-tm" x="252" y="268">бірдей команда</text>
+
+      <!-- arrows out -->
+      <line class="sv-line" x1="654" y1="150" x2="718" y2="80" marker-end="url(#a1)"></line>
+      <line class="sv-line" x1="654" y1="170" x2="718" y2="152" marker-end="url(#a1)"></line>
+      <line class="sv-line" x1="654" y1="190" x2="718" y2="228" marker-end="url(#a1)"></line>
+
+      <!-- difference band -->
+      <line class="sv-dash" x1="20" y1="372" x2="900" y2="372"></line>
+      <text class="sv-tm" x="20" y="398">АЙЫРМАСЫ</text>
+      <text class="sv-t" x="140" y="398">агент: өзі мержейді, автомат жібереді, дедуп жүргізеді</text>
+      <text class="sv-ta" x="140" y="418">skill: мерж жоқ · жіберу растаумен · dedup адамда</text>
+    </svg>
+    <figcaption><b>Gate қабаты ортақ.</b> Skill жаңа тексеріс ойлап шығармайды — агент қолданатын
+    дәл сол командаларды шақырады, сондықтан екі жолдың да сапа табалдырығы бірдей. Skill-де жоқ
+    нәрсе — автономия: мерж, автожіберу, дедуп, cron.</figcaption>
+  </figure>
+</section>
+
+<section id="s3">
+  <h2><span class="num">03</span>Орнату</h2>
+  <p class="lede">Claude Code терминалында екі команда. Логин, токен, клон керек емес.</p>
+
+  <pre><code>/plugin marketplace add nurbeki1/juz40-qa-skills
+/plugin install juz40-qa@juz40-qa</code></pre>
+
+  <p>Тексеру: <code>/plugin list</code>. Жаңарту: <code>/plugin update juz40-qa</code>.</p>
+
+  <h3>Жұмысқа дайындық — skill өзі жасайды</h3>
+  <p>Қызметкерден жол сұралмайды. Skill қосылған бойда ортаны өзі тексереді: репозиторийлерді
+  іздеп табады, не жетіспейтінін айтады және режимді шешеді.</p>
+
+  <pre><code>bash "$CLAUDE_PLUGIN_ROOT/scripts/preflight.sh"</code></pre>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>MODE</th><th>Жағдай</th><th>Не болады</th></tr></thead>
+      <tbody>
+        <tr><td><span class="verdict v-pass">FULL</span></td><td>екі репо + токен дайын</td><td>барлық процедура ашық</td></tr>
+        <tr><td><span class="verdict v-block">SETUP</span></td><td>репо бар, <code>npm ci</code> / <code>.env</code> жетіспейді</td><td>дайын командалар беріледі, кіруін сұрайды</td></tr>
+        <tr><td><span class="verdict v-block">TESTS_ONLY</span></td><td>орkестратор репосы жоқ</td><td>тест жазу/жүгірту бар, <b>gate жоқ</b> — нәтиже «тексерілді» деп жарияланмайды</td></tr>
+        <tr><td><span class="verdict v-fail">BOOTSTRAP</span></td><td>жаңа машина</td><td>клондауға нақты нұсқау</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><code>TESTS_ONLY</code> режимінің шекарасы ашық жазылған: grounding, тест-кейс жобалау,
+  Playwright жазу және триаж талдауы жұмыс істейді; coverage/oracle аудиті, Confluence жариялау,
+  Jira баг renderer-і және QA жабу шешімі — жоқ. Сондықтан skill «мынау істелді, бірақ gate
+  өтпеді» деп ашық айтады.</p>
+
+</section>
+
+<section id="s4">
+  <h2><span class="num">04</span>Нөлдік қадам: авторизация</h2>
+  <p class="lede">Агентте токендер алдын ала берілген, сұрайтын адам жоқ. Skill-де керісінше —
+  алдымен кіру тексеріледі, жетіспесе жұмыс басталмайды.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 266" role="img" aria-label="auth:check командасы READY берсе процедура басталады, BLOCKED берсе нақты кіру нұсқауы шығып, адам кіргеннен кейін қайта іске қосылады">
+      <defs>
+        <marker id="b1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="currentColor"></polygon>
+        </marker>
+        <marker id="b2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon>
+        </marker>
+      </defs>
+
+      <rect class="sv-accfill" x="16" y="64" width="176" height="64" rx="2"></rect>
+      <text class="sv-tb" x="34" y="92">auth:check</text>
+      <text class="sv-tm" x="34" y="112">6 тексеріс · --probe</text>
+
+      <rect class="sv-box" x="256" y="64" width="150" height="64" rx="2"></rect>
+      <text class="sv-tb" x="274" y="92">AUTH_STATUS</text>
+      <text class="sv-tm" x="274" y="112">exit 0 / 3</text>
+
+      <line class="sv-aline" x1="192" y1="96" x2="248" y2="96" marker-end="url(#b2)"></line>
+
+      <!-- ready -->
+      <rect class="sv-accfill" x="470" y="18" width="414" height="56" rx="2"></rect>
+      <text class="sv-tb" x="488" y="42">READY</text>
+      <text class="sv-t" x="580" y="42">процедура басталады</text>
+      <text class="sv-tm" x="488" y="62">Jira 200 · GitLab 200 · тест репосы бар</text>
+      <line class="sv-aline" x1="406" y1="84" x2="462" y2="52" marker-end="url(#b2)"></line>
+
+      <!-- blocked -->
+      <rect class="sv-box" x="470" y="104" width="414" height="86" rx="2"></rect>
+      <text class="sv-tb" x="488" y="128">BLOCKED</text>
+      <text class="sv-t" x="586" y="128">нақты нұсқау шығады, жұмыс тоқтайды</text>
+      <text class="sv-tm" x="488" y="150">«/mcp → Atlassian» · «PAT жаса» · «аккаунт жаңарт»</text>
+      <text class="sv-tm" x="488" y="172">токен мәні басылмайды — тек ұзындық маскасы</text>
+      <line class="sv-line" x1="406" y1="112" x2="462" y2="140" marker-end="url(#b1)"></line>
+
+      <!-- human loop -->
+      <rect class="sv-fill" x="470" y="212" width="196" height="40" rx="2"></rect>
+      <text class="sv-t" x="488" y="238">Адам өзі кіреді</text>
+      <line class="sv-line" x1="520" y1="190" x2="520" y2="206" marker-end="url(#b1)"></line>
+      <path class="sv-line" d="M470 232 L104 232 L104 136" marker-end="url(#b1)"></path>
+      <text class="sv-tm" x="120" y="252">қайта іске қосу</text>
+      <text class="sv-tm" x="690" y="238">браузер логинін агент жасай алмайды</text>
+    </svg>
+    <figcaption><b>Fail-closed цикл.</b> Жартылай деректермен жалғастыруға тыйым: жоқ дереккөзді
+    болжаммен алмастырған тексеріс жалған сенім береді. Сондықтан skill тоқтап, нені қалай
+    түзетуді айтады да, адам кіргеннен кейін қайта басталады.</figcaption>
+  </figure>
+
+  <h3>Кім кімнің атынан жазады</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Нұсқа</th><th>Қалай</th><th>Jira-да кім көрінеді</th><th>Қашан</th></tr></thead>
+      <tbody>
+        <tr><td>Ортақ сервис <code>.env</code></td><td>орkестратор репосының токені</td><td><code>agent007</code></td><td>тек оқу</td></tr>
+        <tr><td>Жеке токен</td><td>әркімнің өз <code>.env</code>-і</td><td><b>өз атынан</b></td><td>баг, кейс жариялау, MR</td></tr>
+        <tr><td>MCP коннектор</td><td><code>/mcp</code> → браузерде бір рет</td><td>өз атынан, токен файлда жоқ</td><td>оқу (CI-да жүрмейді)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Ұсынылатын гибрид: <b>оқу</b> — MCP арқылы, <b>жазу</b> — жеке токенмен. Сонда аудит таза
+  болады: «бұл багты кім ашты» деген сұрақ қалмайды.</p>
+</section>
+
+<section id="s5">
+  <h2><span class="num">05</span>Процедураны қалай табады</h2>
+  <p class="lede">Skill — бір кіру нүктесі және он бір процедура. Бәрі бірден жүктелмейді:
+  router қай файл керегін шешеді.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 364" role="img" aria-label="SKILL.md әрқашан жүктеледі және сұранысқа қарай тек бір процедура файлын ашады, қалған ондауы контекстке кірмейді">
+      <defs>
+        <marker id="c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="currentColor"></polygon>
+        </marker>
+        <marker id="c2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon>
+        </marker>
+      </defs>
+
+      <text class="sv-tm" x="16" y="22">СҰРАНЫС</text>
+      <text class="sv-tm" x="300" y="22">ӘРҚАШАН ЖҮКТЕЛЕДІ</text>
+      <text class="sv-tm" x="620" y="22">КЕРЕК КЕЗДЕ ОҚЫЛАДЫ</text>
+
+      <rect class="sv-fill" x="16" y="40" width="212" height="34" rx="2"></rect>
+      <text class="sv-t" x="30" y="62">«тест-кейс жаз»</text>
+      <rect class="sv-accfill" x="16" y="84" width="212" height="34" rx="2"></rect>
+      <text class="sv-t" x="30" y="106">«препродта тексер»</text>
+      <rect class="sv-fill" x="16" y="128" width="212" height="34" rx="2"></rect>
+      <text class="sv-t" x="30" y="150">«тест құлады»</text>
+      <rect class="sv-fill" x="16" y="172" width="212" height="34" rx="2"></rect>
+      <text class="sv-t" x="30" y="194">«дизайнмен сәйкес пе»</text>
+      <rect class="sv-fill" x="16" y="216" width="212" height="34" rx="2"></rect>
+      <text class="sv-t" x="30" y="238">«кезекшілік есебі»</text>
+      <text class="sv-tm" x="30" y="274">DV-XXXX айтылса да қосылады</text>
+
+      <rect class="sv-box" x="300" y="40" width="238" height="210" rx="2"></rect>
+      <text class="sv-tb" x="320" y="68">SKILL.md</text>
+      <text class="sv-t" x="320" y="92">· auth preflight</text>
+      <text class="sv-t" x="320" y="114">· процедура картасы</text>
+      <text class="sv-t" x="320" y="136">· 8 қатаң ереже</text>
+      <text class="sv-t" x="320" y="158">· ортақ орнату</text>
+      <text class="sv-tm" x="320" y="192">router: не керегін шешеді,</text>
+      <text class="sv-tm" x="320" y="210">процедураны өзі қайталамайды</text>
+
+      <line class="sv-line" x1="228" y1="57" x2="292" y2="96" marker-end="url(#c1)"></line>
+      <line class="sv-aline" x1="228" y1="101" x2="292" y2="124" marker-end="url(#c2)"></line>
+      <line class="sv-line" x1="228" y1="145" x2="292" y2="152" marker-end="url(#c1)"></line>
+      <line class="sv-line" x1="228" y1="189" x2="292" y2="178" marker-end="url(#c1)"></line>
+      <line class="sv-line" x1="228" y1="233" x2="292" y2="206" marker-end="url(#c1)"></line>
+
+      <rect class="sv-dash" x="620" y="40" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="57">spec-to-testcases.md</text>
+      <rect class="sv-accfill" x="620" y="72" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="89">preprod-verify.md</text>
+      <rect class="sv-dash" x="620" y="104" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="121">triage.md</text>
+      <rect class="sv-dash" x="620" y="136" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="153">bug-report.md</text>
+      <rect class="sv-dash" x="620" y="168" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="185">quality-gates.md</text>
+      <rect class="sv-dash" x="620" y="200" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="217">figma-check.md</text>
+      <rect class="sv-dash" x="620" y="232" width="264" height="24" rx="2"></rect>
+      <text class="sv-t" x="634" y="249">+ 5 процедура</text>
+
+      <line class="sv-aline" x1="538" y1="124" x2="612" y2="84" marker-end="url(#c2)"></line>
+      <text class="sv-ta" x="520" y="150">біреуі ашылады</text>
+
+      <line class="sv-dash" x1="16" y1="306" x2="884" y2="306"></line>
+      <text class="sv-tm" x="16" y="332">НЕГЕ ОЛАЙ</text>
+      <text class="sv-t" x="140" y="332">он бір процедураны бірден жүктесе, контекст процедурамен толып қалады —</text>
+      <text class="sv-t" x="140" y="352">ал нақты жұмысқа (спека, код, артефакт) орын азаяды.</text>
+    </svg>
+    <figcaption><b>Progressive disclosure.</b> Router қысқа: ол тек бағыттайды. Grounding әдістемесі
+    тест-кейс, автотест және триаж процедурасының астында жатыр, сондықтан факт тексерілмей жұмыс
+    басталмайды.</figcaption>
+  </figure>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Процедура</th><th>Нені шешеді</th><th>Негізгі команда</th></tr></thead>
+      <tbody>
+        <tr><td>grounding</td><td>болжам емес, факт: API probe, продукт коды, read-only DB</td><td><code>ground.sh</code></td></tr>
+        <tr><td>spec-to-testcases</td><td>спека → Confluence кейс парағы, дубльсіз</td><td><code>write-testcases</code></td></tr>
+        <tr><td>autotest-write</td><td>кейс → Playwright, oracle талаптарымен</td><td><code>coverage</code></td></tr>
+        <tr><td>quality-gates</td><td>ревьюге дейінгі аудит</td><td><code>qa:full</code></td></tr>
+        <tr><td>preprod-verify</td><td>препрод тексерісі және QA жабу шарты</td><td><code>verify-feature</code></td></tr>
+        <tr><td>triage</td><td>баг па, тест пе, flaky ма</td><td><code>event -- triage</code></td></tr>
+        <tr><td>bug-report</td><td>Jira баг контракты</td><td><code>bug:report</code></td></tr>
+        <tr><td>figma-check</td><td>UI мен макет сәйкестігі</td><td><code>figma -- texts</code></td></tr>
+        <tr><td>env-readiness</td><td>орта сынды ма, аккаунт па</td><td><code>readiness:diagnose</code></td></tr>
+        <tr><td>duty-report</td><td>дейлик, релиз, Allure</td><td><code>daily-report -- --dry</code></td></tr>
+        <tr><td>auth</td><td>кім кімнің атынан жазады</td><td><code>auth:check</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s6">
+  <h2><span class="num">06</span>Негізгі ағын: препродта тексеру</h2>
+  <p class="lede">Кезекшінің күнделікті жұмысы. Қымбат браузер прогонына дейін арзан аудиттер
+  жүреді — бұл кездейсоқ тәртіп емес.</p>
+
+  <figure>
+    <svg viewBox="0 0 920 330" role="img" aria-label="Препрод тексерісі: орта диагностикасы, төрт арзан аудит, өтсе ғана runtime прогон, содан соң evidence және тоғыз шарттан тұратын completion gate">
+      <defs>
+        <marker id="d1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="currentColor"></polygon>
+        </marker>
+        <marker id="d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon>
+        </marker>
+      </defs>
+
+      <rect class="sv-fill" x="16" y="58" width="128" height="58" rx="2"></rect>
+      <text class="sv-tb" x="32" y="82">scope</text>
+      <text class="sv-tm" x="32" y="102">BACK / FRONT</text>
+
+      <rect class="sv-fill" x="176" y="58" width="150" height="58" rx="2"></rect>
+      <text class="sv-tb" x="192" y="82">readiness</text>
+      <text class="sv-tm" x="192" y="102">4 тәуелсіз check</text>
+
+      <rect class="sv-box" x="358" y="40" width="268" height="94" rx="2"></rect>
+      <text class="sv-tm" x="374" y="62">АРЗАН АУДИТТЕР · бәрі жүреді</text>
+      <text class="sv-t" x="374" y="86">coverage · test-quality</text>
+      <text class="sv-t" x="374" y="108">independence · oracle</text>
+
+      <rect class="sv-accfill" x="658" y="58" width="128" height="58" rx="2"></rect>
+      <text class="sv-tb" x="674" y="82">qa:run</text>
+      <text class="sv-tm" x="674" y="102">preprod прогон</text>
+
+      <rect class="sv-fill" x="818" y="58" width="86" height="58" rx="2"></rect>
+      <text class="sv-tb" x="834" y="82">Allure</text>
+      <text class="sv-tm" x="834" y="102">evidence</text>
+
+      <line class="sv-line" x1="144" y1="87" x2="168" y2="87" marker-end="url(#d1)"></line>
+      <line class="sv-line" x1="326" y1="87" x2="350" y2="87" marker-end="url(#d1)"></line>
+      <line class="sv-aline" x1="626" y1="87" x2="650" y2="87" marker-end="url(#d2)"></line>
+      <text class="sv-ta" x="604" y="140">өтсе ғана</text>
+      <line class="sv-line" x1="786" y1="87" x2="810" y2="87" marker-end="url(#d1)"></line>
+
+      <!-- fail-closed branches -->
+      <path class="sv-line" d="M251 116 L251 182" marker-end="url(#d1)"></path>
+      <rect class="sv-box" x="176" y="190" width="150" height="56" rx="2"></rect>
+      <text class="sv-t" x="192" y="214">fail-closed</text>
+      <text class="sv-tm" x="192" y="234">credential · product</text>
+      <text class="sv-tm" x="258" y="166">retry жоқ</text>
+
+      <path class="sv-line" d="M492 134 L492 182" marker-end="url(#d1)"></path>
+      <rect class="sv-box" x="400" y="190" width="186" height="56" rx="2"></rect>
+      <text class="sv-t" x="416" y="214">PARTIAL · exit 4</text>
+      <text class="sv-tm" x="416" y="234">қымбат прогон басталмайды</text>
+      <text class="sv-tm" x="500" y="166">құласа</text>
+
+      <!-- completion gate -->
+      <rect class="sv-box" x="658" y="190" width="246" height="56" rx="2"></rect>
+      <text class="sv-tb" x="674" y="214">completion gate</text>
+      <text class="sv-tm" x="674" y="234">9 шарт бірден орындалуы керек</text>
+      <path class="sv-aline" d="M861 116 L861 182" marker-end="url(#d2)"></path>
+
+      <line class="sv-dash" x1="16" y1="276" x2="904" y2="276"></line>
+      <text class="sv-tm" x="16" y="300">ЖАБУ ШАРТЫ</text>
+      <text class="sv-t" x="140" y="300">бір дәл кейс парағы · coverage толық · қажет layer-лер · oracle және test-data өткен</text>
+      <text class="sv-t" x="140" y="320">evidence ағымдағы run/commit/парақ нұсқасына тиесілі · failed=0 · skipped=0 · flaky=0 · mobile scope жоқ</text>
+    </svg>
+    <figcaption><b>Арзан тексеріс бірінші.</b> Белгілі сапа кемшілігі болса браузер мүлде
+    жүгірмейді — нәтиже <span class="verdict v-block">PARTIAL</span> болады. Ағымдағы прогондағы
+    бір retry-pass те жабуды блоктайды, ал evidence 120 минуттан кейін ескіреді: ескі дәлелмен
+    QA жабылмайды.</figcaption>
+  </figure>
+
+  <pre><code>npm --prefix "$AGENT_ORCHESTRATOR_PATH" run readiness:diagnose
+npm --prefix "$AGENT_ORCHESTRATOR_PATH" run qa:full        -- DV-5877
+npm --prefix "$AGENT_ORCHESTRATOR_PATH" run verify-feature -- DV-5877 --check</code></pre>
+</section>
+
+<section id="s7">
+  <h2><span class="num">07</span>Триаж — ең қымбат шешім</h2>
+  <p class="lede">Тест қызыл болды. Бұл продукт багы ма, тест ескірген бе, әлде тұрақсыз ба?
+  Қате жауап екі жолмен зиян келтіреді: шынайы баг жасырылады немесе бос баг ашылады.</p>
+
+  <div class="guard">
+    <span class="tag">Басты guardrail</span>
+    <p>Продукт спеканы бұзып тұрса, тестті «жасыл болсын» деп ЕШҚАШАН түзетпе. Күтілетін мәнді
+    продуктің қате мінезіне бейімдеу — багты жасыру. Тестті өзгертуге тек тестте қате екені
+    grounding-пен дәлелденгенде болады.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 900 338" role="img" aria-label="Триаж үш салыстырудан тұрады: факт, спека және тест. Осы үштіктің нәтижесі бес вердиктің біріне апарады">
+      <defs>
+        <marker id="e1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="currentColor"></polygon>
+        </marker>
+      </defs>
+
+      <text class="sv-tm" x="16" y="22">ҮШ ДЕРЕККӨЗ</text>
+      <text class="sv-tm" x="330" y="22">САЛЫСТЫРУ</text>
+      <text class="sv-tm" x="620" y="22">ВЕРДИКТ ЖӘНЕ ӘРЕКЕТ</text>
+
+      <rect class="sv-accfill" x="16" y="44" width="150" height="40" rx="2"></rect>
+      <text class="sv-t" x="32" y="69">ФАКТ · ground.sh</text>
+      <rect class="sv-fill" x="16" y="96" width="150" height="40" rx="2"></rect>
+      <text class="sv-t" x="32" y="121">СПЕКА · Confluence</text>
+      <rect class="sv-fill" x="16" y="148" width="150" height="40" rx="2"></rect>
+      <text class="sv-t" x="32" y="173">ТЕСТ · assertion</text>
+
+      <rect class="sv-box" x="206" y="44" width="200" height="144" rx="2"></rect>
+      <text class="sv-t" x="222" y="72">ФАКТ ≠ СПЕКА</text>
+      <text class="sv-t" x="222" y="100">ТЕСТ ≠ СПЕКА,</text>
+      <text class="sv-t" x="222" y="118">ФАКТ = СПЕКА</text>
+      <text class="sv-t" x="222" y="146">retry-да өтті</text>
+      <text class="sv-t" x="222" y="174">дереккөз жоқ / қайшы</text>
+
+      <line class="sv-line" x1="166" y1="64" x2="198" y2="80" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="166" y1="116" x2="198" y2="116" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="166" y1="168" x2="198" y2="152" marker-end="url(#e1)"></line>
+
+      <rect class="sv-box" x="470" y="38" width="414" height="38" rx="2"></rect>
+      <text class="sv-tb" x="486" y="62" fill="var(--fail)">PRODUCT_BUG</text>
+      <text class="sv-t" x="632" y="62">Jira баг · тестті түртпейсің</text>
+
+      <rect class="sv-box" x="470" y="86" width="414" height="38" rx="2"></rect>
+      <text class="sv-tb" x="486" y="110">STALE_TEST</text>
+      <text class="sv-t" x="632" y="110">self-heal: минимал түзету</text>
+
+      <rect class="sv-box" x="470" y="134" width="414" height="38" rx="2"></rect>
+      <text class="sv-tb" x="486" y="158">TEST_ERROR</text>
+      <text class="sv-t" x="632" y="158">тестегі допущениені түзет</text>
+
+      <rect class="sv-box" x="470" y="182" width="414" height="38" rx="2"></rect>
+      <text class="sv-tb" x="486" y="206" fill="var(--block)">FLAKY</text>
+      <text class="sv-t" x="632" y="206">баг емес · жасыл да емес</text>
+
+      <rect class="sv-box" x="470" y="230" width="414" height="38" rx="2"></rect>
+      <text class="sv-tb" x="486" y="254" fill="var(--block)">UNKNOWN</text>
+      <text class="sv-t" x="632" y="254">эскалация · болжамау</text>
+
+      <line class="sv-line" x1="406" y1="72" x2="462" y2="58" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="406" y1="109" x2="462" y2="105" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="406" y1="112" x2="462" y2="153" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="406" y1="146" x2="462" y2="201" marker-end="url(#e1)"></line>
+      <line class="sv-line" x1="406" y1="174" x2="462" y2="249" marker-end="url(#e1)"></line>
+
+      <line class="sv-dash" x1="16" y1="294" x2="884" y2="294"></line>
+      <text class="sv-tm" x="16" y="318">ТӘРТІП</text>
+      <text class="sv-t" x="140" y="318">grounding бірінші, вердикт сосын. Self-heal тек STALE_TEST және TEST_ERROR-ға ашық.</text>
+    </svg>
+    <figcaption><b>Үш салыстыру вердиктті шешеді.</b> Факт пен спеканы, тест пен спеканы бөлек
+    салыстыру — продукт багын тест қатесінен ажыратудың жалғыз сенімді жолы. Self-heal жасағанда
+    тест «іс бойынша» жасыл болуы керек: өту үшін тексерісті алып тастауға тура келсе, бұл heal емес.</figcaption>
+  </figure>
+</section>
+
+<section id="s8">
+  <h2><span class="num">08</span>Сапа gate-тері нені блоктайды</h2>
+  <p class="lede">Бұл тізім skill-дің пікірі емес — детерминды тексерістер. Құласа, кодты түзету
+  керек, gate-ті емес.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Gate</th><th>Блоктайтын жағдайлар</th></tr></thead>
+      <tbody>
+        <tr><td><code>coverage</code></td><td>TC ↔ Playwright трассировкасы үзілген: жетпейтін немесе артық кейс, жабылмаған layer. Кейс ID тек негізгі executable кестеден оқылады — coverage matrix, архив, коммент есепке алынбайды</td></tr>
+        <tr><td><code>test-quality</code></td><td>assertion-сыз тест; тек HTTP статус тексеретін positive API кейсі; acceptance 5xx; success пен error статусты бір уақытта қабылдау; «500 емес» деген әлсіз шарт; бақыланатын нәтижесі жоқ UI тест</td></tr>
+        <tr><td><code>oracle:audit</code></td><td>response schema мен business инвариант бөлек дәлелденбеуі; requirement → TC → grounded source байланысының жоқтығы; дереккөзде парақ нұсқасы болмауы; postcondition hook-сыз positive mutation; manifest ішінде секрет</td></tr>
+        <tr><td><code>independence</code></td><td><code>serial</code> тәуелділік, mutating <code>beforeAll</code>, кеш shared cleanup. Тізім араластырылып, әр тест жеке жүгіреді, сосын 2 worker × 2 repeat, retries=0</td></tr>
+        <tr><td>test-data</td><td>retry арасында қайталанатын дерек; кепілсіз cleanup; shared entity-ді қалпына келтірмеу; үнсіз <code>.catch()</code></td></tr>
+        <tr><td><code>ui:coverage</code></td><td>declaration/файл сәйкессіздігі, P0/P1 journey матрицасының бұзылуы, мерзімі өткен quarantine</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s9">
+  <h2><span class="num">09</span>Сұйылтуға болмайтын сегіз ереже</h2>
+  <p class="lede">Агентте де, skill-де де бірдей. Бұзылса — жұмыс нәтижесі жарамсыз.</p>
+
+  <ol class="rule-list">
+    <li><b>Продукт коды, БД, Elastic, Figma — тек оқу.</b> Коммит/пуш жоқ.</li>
+    <li><b>Gate-ті жеңілдетуге тыйым</b> — «жасыл болсын» деп әлсіретуге болмайды.</li>
+    <li><b>PRODUCT_BUG-ты дәлелсіз STALE_TEST қылуға тыйым.</b> Бұл багты жасыру.</li>
+    <li><b>Mobile scope-ты web арқылы жабуға тыйым</b> — handoff.</li>
+    <li><b>Тест өзгерісі тек branch + Draft MR.</b> Skill мерж жасамайды.</li>
+    <li><b>Сыртқы жазу renderer арқылы.</b> Қолмен description, raw Jira POST — жоқ.</li>
+    <li><b>Секретті баспа, сұрама, репоға жазба.</b> Тек env атауы.</li>
+    <li><b>Белгісіздікті болжаумен жаппа</b> — <span class="verdict v-block">UNKNOWN</span> → эскалация.</li>
+  </ol>
+</section>
+
+<section id="s10">
+  <h2><span class="num">10</span>Figma сверкасы</h2>
+  <p class="lede">Дизайн тексерісі арзаннан қымбатқа жүреді, себебі айырма көбінесе мәтіннен
+  басталады.</p>
+
+  <ol class="steps">
+    <li><b>Сілтемені спекадан ал</b><small>Confluence-тегі «Дизайн» сілтемесінен. Жоқ болса — бұл product gap, өзің макет іздеп кетпейсің.</small></li>
+    <li><b>Мәтін сверкасы</b><small><code>figma -- texts</code> → тірі беттің мәтіндерімен салыстыру. i18n, copy, батырма атауы, реттілік — суретсіз, детерминды.</small></li>
+    <li><b>Содан кейін визуал</b><small><code>figma -- export</code> + Playwright скриншоты → құрылымдық салыстыру: элемент бар/жоқ, күй, иерархия. Pixel-perfect емес.</small></li>
+    <li><b>Вердикт</b><small>Спека мен дизайн келісіп, прод басқаша болса — <span class="verdict v-fail">PRODUCT_BUG</span>. Спека мен дизайн бір-біріне қарсы болса — <span class="verdict v-block">UNKNOWN</span>, екеуі бірдей авторитетті.</small></li>
+  </ol>
+
+  <p>Пиксель деңгейіндегі регрессия — басқа механизм: <code>visual:baseline</code> скриншотты
+  бекітілген baseline-мен салыстырады, Figma-мен емес.</p>
+</section>
+
+<section id="s11">
+  <h2><span class="num">11</span>Кезекшінің тізбегі</h2>
+  <p class="lede">Үш процедура, нақты осы ретпен. Алдыңғысы құласа келесісінің мәні жоқ.</p>
+
+  <ol class="steps">
+    <li><b>Орта дайын ба</b><small><code>readiness:diagnose</code> — препрод UI, API auth, төрт рөл аккаунты, deploy метадеректері. Құласа себебін өзгертпей хабарла: категория, иесі, әрекет.</small></li>
+    <li><b>Фичаны тексер</b><small><code>qa:full -- DV-XXXX</code> → gate-тер → evidence → completion gate. Құлаған тест болса триажға өтеді, автоматты қайта жүгірту жоқ.</small></li>
+    <li><b>Есеп бер</b><small><code>daily-report -- --dry</code> әдепкі. Мәтінді көрсетіп, растағаннан кейін ғана жібереді. Есепте <b>не тексерілмегені және неге</b> міндетті.</small></li>
+  </ol>
+</section>
+
+<section id="s12">
+  <h2><span class="num">12</span>Жаңарту қалай тарайды</h2>
+  <p class="lede">Дереккөз — орkестратор репосы. Plugin репосы тек тарату арнасы, сондықтан
+  өзгертуді көшірмеде жасауға болмайды.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 150" role="img" aria-label="Өзгерту дереккөз репосында жасалады, скрипт plugin репосына көшіреді, GitHub арқылы қызметкерлер plugin update арқылы алады">
+      <defs>
+        <marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon>
+        </marker>
+      </defs>
+      <rect class="sv-accfill" x="12" y="40" width="166" height="56" rx="2"></rect>
+      <text class="sv-tb" x="28" y="64">juz40-aqa-agent007</text>
+      <text class="sv-tm" x="28" y="84">.claude/skills/juz40-qa</text>
+
+      <rect class="sv-fill" x="226" y="40" width="166" height="56" rx="2"></rect>
+      <text class="sv-t" x="242" y="64">install-qa-skill.sh</text>
+      <text class="sv-tm" x="242" y="84">--plugin</text>
+
+      <rect class="sv-fill" x="440" y="40" width="166" height="56" rx="2"></rect>
+      <text class="sv-t" x="456" y="64">juz40-qa-skills</text>
+      <text class="sv-tm" x="456" y="84">commit + push</text>
+
+      <rect class="sv-fill" x="654" y="40" width="112" height="56" rx="2"></rect>
+      <text class="sv-t" x="670" y="64">GitHub</text>
+      <text class="sv-tm" x="670" y="84">public</text>
+
+      <rect class="sv-accfill" x="800" y="40" width="88" height="56" rx="2"></rect>
+      <text class="sv-t" x="816" y="64">Команда</text>
+      <text class="sv-tm" x="816" y="84">update</text>
+
+      <line class="sv-aline" x1="178" y1="68" x2="218" y2="68" marker-end="url(#f1)"></line>
+      <line class="sv-aline" x1="392" y1="68" x2="432" y2="68" marker-end="url(#f1)"></line>
+      <line class="sv-aline" x1="606" y1="68" x2="646" y2="68" marker-end="url(#f1)"></line>
+      <line class="sv-aline" x1="766" y1="68" x2="792" y2="68" marker-end="url(#f1)"></line>
+      <text class="sv-tm" x="12" y="130">дереккөз</text>
+      <text class="sv-tm" x="226" y="130">sync</text>
+      <text class="sv-tm" x="440" y="130">тарату репосы</text>
+      <text class="sv-tm" x="800" y="130">/plugin update</text>
+    </svg>
+    <figcaption><b>Бір бағытты sync.</b> Plugin репосындағы skill — көшірме. Оны тікелей өңдесе,
+    келесі sync өзгерісті жоғалтады.</figcaption>
+  </figure>
+</section>
+
+<section id="s13">
+  <h2><span class="num">13</span>Skill нені алмастырмайды</h2>
+  <p>Агенттегі автономия қабаты орнында қалады: тәулік бойы Jira скандау, deployment observer,
+  dedup және cooldown, model routing, CI авто-триггер. Оларды адам қайталамайды.</p>
+  <p>Сондай-ақ skill шешпейтін нәрселер: native Flutter/mobile тестілеу, тексерілетін oracle-ге
+  айналмайтын exploratory UX шешімдері, performance және security тестілеу жеке дисциплина ретінде,
+  финалды мерж және production deploy, және дереккөздер бірдей авторитетті болған продукт
+  қайшылықтары.</p>
+  <p>Бұл шектеулер ашық айтылған: процедура «тексердім» деп айта алмайды — артефакт керек.</p>
+</section>
+
+<footer>
+  <p>Дереккөз репосы: <code>juz40-aqa-agent007</code> · Канондық мінез-құлық:
+  <code>docs/AGENT-FUNCTIONS.md</code> · Миграция картасы: <code>docs/SKILLS-MIGRATION.md</code></p>
+  <p>Орнату: <code>/plugin marketplace add nurbeki1/juz40-qa-skills</code></p>
+</footer>
+
+</main>
+
+<nav class="toc" aria-label="Бөлімдер">
+  <h2>Мазмұны</h2>
+  <ol>
+    <li><a href="#s1">Бұл не</a></li>
+    <li><a href="#s2">Екі драйвер</a></li>
+    <li><a href="#s3">Орнату</a></li>
+    <li><a href="#s4">Авторизация</a></li>
+    <li><a href="#s5">Процедура картасы</a></li>
+    <li><a href="#s6">Препрод тексерісі</a></li>
+    <li><a href="#s7">Триаж</a></li>
+    <li><a href="#s8">Gate-тер</a></li>
+    <li><a href="#s9">Сегіз ереже</a></li>
+    <li><a href="#s10">Figma</a></li>
+    <li><a href="#s11">Кезекші тізбегі</a></li>
+    <li><a href="#s12">Жаңарту</a></li>
+    <li><a href="#s13">Шектеулер</a></li>
+  </ol>
+</nav>
+</div>
+</div>
