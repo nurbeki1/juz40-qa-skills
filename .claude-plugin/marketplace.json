@@ -1,0 +1,14 @@
+{
+  "name": "juz40-qa",
+  "description": "Juz40 QA/AQA процедуралары: спекадан тест-кейс, автотест, препрод тексерісі, триаж, баг, сапа gate-тері",
+  "owner": {
+    "name": "Nurbek Abilassan"
+  },
+  "plugins": [
+    {
+      "name": "juz40-qa",
+      "source": "./plugins/juz40-qa",
+      "description": "QA/AQA жұмысының толық процедурасы: тест-кейс жазу, Playwright автотест, препродта тексеру және QA жабу, триаж, Jira баг, Figma сверкасы, орта диагностикасы, кезекшілік есебі"
+    }
+  ]
+}
