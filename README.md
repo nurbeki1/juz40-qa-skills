@@ -39,6 +39,8 @@ Claude Code терминалында екі команда:
 
 Жаңартуға: `/plugin update juz40-qa`.
 
+Презентация (15 слайд, PDF қоса): [docs/skill-presentation.html](docs/skill-presentation.html) · [juz40-qa-skill.pdf](docs/juz40-qa-skill.pdf) · [онлайн](https://claude.ai/code/artifact/8e99db9f-96f3-4521-93b7-c6631f0b9529)
+
 Қалай жұмыс істейтінін көрнекі түсіндіру (диаграммалармен):
 [docs/how-it-works.html](docs/how-it-works.html) · [онлайн нұсқасы](https://claude.ai/code/artifact/4062e86a-c5e3-430a-a417-87a1d8d711d8)
 

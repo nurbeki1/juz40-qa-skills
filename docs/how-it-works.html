@@ -289,14 +289,16 @@
     max-width: 72ch;
   }
   .steps li::before {
+    grid-column: 1;
     content: "0" counter(s);
     font-family: var(--mono);
     font-size: 12px;
     color: var(--accent);
     padding-top: 3px;
   }
+  .steps li > b, .steps li > small { grid-column: 2; }
   .steps b { font-weight: 600; }
-  .steps small { display: block; color: var(--muted); font-size: 14px; }
+  .steps small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
 
   .verdict { font-family: var(--mono); font-size: 0.86em; padding: 0.1em 0.4em; border-radius: 2px; white-space: nowrap; }
   .v-pass { color: var(--pass); border: 1px solid var(--pass); }

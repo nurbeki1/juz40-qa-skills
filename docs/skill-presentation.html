@@ -1,0 +1,485 @@
+<title>QA Skill-пен не істеуге болады</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Noto+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #edf1ee;
+    --surface: #ffffff;
+    --surface-2: #e0e7e1;
+    --ink: #141d18;
+    --muted: #55655c;
+    --line: #c5d1c8;
+    --line-soft: #dde5df;
+    --accent: #1f6b45;
+    --accent-soft: #d9ebe0;
+    --clay: #9a5330;
+    --clay-soft: #f1e2da;
+    --warn: #8c6a12;
+    --serif: 'Noto Serif', Georgia, serif;
+    --sans: 'Noto Sans', system-ui, 'Helvetica Neue', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0b110d; --surface: #141d17; --surface-2: #1c2721; --ink: #e6ede8;
+      --muted: #96a89d; --line: #27332c; --line-soft: #1e2a23;
+      --accent: #5fc08a; --accent-soft: #14281d; --clay: #d79068; --clay-soft: #2a1d16;
+      --warn: #d7b25c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0b110d; --surface: #141d17; --surface-2: #1c2721; --ink: #e6ede8;
+    --muted: #96a89d; --line: #27332c; --line-soft: #1e2a23;
+    --accent: #5fc08a; --accent-soft: #14281d; --clay: #d79068; --clay-soft: #2a1d16;
+    --warn: #d7b25c;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slide {
+    min-height: 100vh; scroll-snap-align: start;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 64px 56px 80px; border-bottom: 1px solid var(--line); position: relative;
+  }
+  .inner { width: 100%; max-width: 1000px; margin: 0 auto; }
+  @media (max-width: 760px) { .slide { padding: 48px 22px 64px; min-height: auto; } html { scroll-snap-type: none; } }
+
+  .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .tag.clay { color: var(--clay); }
+  h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(2.3rem, 5.6vw, 4rem); line-height: 1.18; padding-bottom: 0.08em; letter-spacing: -0.02em; margin: 0 0 22px; text-wrap: balance; max-width: 26ch; }
+  h2 { font-family: var(--serif); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1.3; padding-bottom: 0.06em; letter-spacing: -0.015em; margin: 0 0 16px; text-wrap: balance; max-width: 28ch; }
+  h3 { font-weight: 700; font-size: 1rem; margin: 0 0 6px; }
+  p { margin: 0 0 14px; max-width: 62ch; }
+  .big { font-size: clamp(1.1rem, 1.9vw, 1.32rem); color: var(--muted); max-width: 56ch; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--surface-2); padding: 0.1em 0.36em; border-radius: 2px; }
+  strong { font-weight: 700; }
+
+  /* команда жолағы — осы декті байланыстыратын мотив */
+  .cmd {
+    font-family: var(--mono); font-size: clamp(14px, 1.5vw, 17px);
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    padding: 14px 18px; margin: 0 0 24px; display: flex; gap: 12px; align-items: baseline;
+    overflow-x: auto; white-space: nowrap;
+  }
+  .cmd .pr { color: var(--accent); font-weight: 500; }
+  .cmd.clay { border-left-color: var(--clay); }
+  .cmd.clay .pr { color: var(--clay); }
+
+  .flow { display: grid; gap: 10px; margin: 0 0 20px; }
+  .flow .st { display: grid; grid-template-columns: 26px 1fr; gap: 13px; align-items: start; max-width: 82ch; }
+  .flow .st > .k { font-family: var(--mono); font-size: 11.5px; color: var(--muted); padding-top: 5px; }
+  .flow .st > .v { font-size: 15.5px; }
+  .flow .st .v b { font-weight: 700; }
+  .flow .st .v span { color: var(--muted); }
+
+  .out {
+    background: var(--accent-soft); border: 1px solid var(--accent); padding: 14px 18px;
+    font-size: 15.5px; max-width: none;
+  }
+  .out b { font-weight: 700; }
+  .stop {
+    background: var(--clay-soft); border: 1px solid var(--clay); padding: 12px 18px;
+    font-size: 14.5px; max-width: none; margin-top: 12px; color: var(--ink);
+  }
+  .stop b { color: var(--clay); font-weight: 700; }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 24px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--accent); padding: 18px; }
+  .card p { margin: 0; font-size: 14.5px; color: var(--muted); max-width: none; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 24px 0 0; }
+  .stat { background: var(--surface); padding: 18px; }
+  .stat .n { font-family: var(--serif); font-weight: 700; font-size: clamp(1.8rem, 3.2vw, 2.4rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat .l { display: block; font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+  .tablewrap { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 15px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--surface-2); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  td.m { font-family: var(--mono); white-space: nowrap; }
+  .tablewrap.tight table { font-size: 13.8px; }
+  .tablewrap.tight th, .tablewrap.tight td { padding: 6px 14px; }
+
+  ul.plain { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 11px; }
+  ul.plain li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; max-width: 80ch; align-items: start; }
+  ul.plain li::before { content: ""; grid-column: 1; width: 6px; height: 6px; margin-top: 10px; background: var(--accent); border-radius: 50%; }
+  ul.plain li > * { grid-column: 2; }
+  ul.plain.clay li::before { background: var(--clay); }
+  ul.plain small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+
+  figure { margin: 22px 0 0; overflow-x: auto; }
+  figure svg { display: block; max-width: 100%; height: auto; color: var(--ink); }
+  figcaption { font-size: 13px; color: var(--muted); margin-top: 12px; max-width: 70ch; }
+  .sv-fill { fill: var(--surface); stroke: var(--line); stroke-width: 1.1; }
+  .sv-acc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+  .sv-clay { fill: var(--clay-soft); stroke: var(--clay); stroke-width: 1.4; }
+  .sv-t { font-family: var(--sans); font-size: 13px; fill: currentColor; }
+  .sv-tb { font-family: var(--sans); font-size: 13px; font-weight: 700; fill: currentColor; }
+  .sv-tm { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+  .sv-l { stroke: currentColor; stroke-width: 1.3; fill: none; }
+  .sv-la { stroke: var(--accent); stroke-width: 1.7; fill: none; }
+
+  .counter { position: absolute; bottom: 26px; right: 56px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .rail { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0; z-index: 10; }
+  .hint { position: fixed; bottom: 20px; left: 56px; font-family: var(--mono); font-size: 11px; color: var(--muted); z-index: 10; }
+  @media (max-width: 760px) { .hint { display: none; } .counter { right: 22px; bottom: 18px; } }
+  .meta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); }
+
+  /* ---------- БАСПА / PDF: әр слайд — бір бет ---------- */
+  @media print {
+    :root {
+      --paper: #ffffff; --surface: #ffffff; --surface-2: #e8eee9; --ink: #141d18;
+      --muted: #55655c; --line: #b9c7bd; --line-soft: #dde5df;
+      --accent: #1f6b45; --accent-soft: #e2f0e7; --clay: #9a5330; --clay-soft: #f5e8e1;
+    }
+    @page { size: 338mm 190mm; margin: 0; }
+    html { scroll-snap-type: none; }
+    body { background: #fff; font-size: 16px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rail, .hint { display: none !important; }
+    .slide {
+      min-height: 0; height: 190mm; padding: 15mm 20mm 13mm;
+      border-bottom: none; break-after: page; page-break-after: always;
+      overflow: hidden;
+    }
+    .slide:last-of-type { break-after: auto; page-break-after: auto; }
+    .counter { bottom: 7mm; right: 20mm; }
+    .cmd, .tablewrap, figure { overflow: visible; }
+  }
+</style>
+
+<div class="rail" id="rail"></div>
+<div class="hint">← → слайд · 15 слайд</div>
+
+<!-- 1 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Juz40 · QA/AQA</p>
+    <h1>QA Skill: осы skill арқылы не істеуге болады</h1>
+    <p class="big">Agent 007 автономды орындайтын QA жұмысы Claude Code skill-іне айналды.
+    Енді кезекші агентті күтпей, сол әдістемені өзі қолданады — ал сапа табалдырығы
+    өзгерген жоқ.</p>
+    <div class="meta"><span>19.11.2026</span><span>11 процедура</span><span>орнату: 2 команда</span></div>
+  </div>
+  <span class="counter">01 / 15</span>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Идея</p>
+    <h2>Айырмасы: жұмысты кім бастайды</h2>
+    <p class="big">Агент тәулік бойы Jira-ны сканерлеп, өзі тапсырма табады. Кезекшіге басқа нәрсе
+    керек: «мынау фичаны қазір тексеруім керек». Skill дәл осыны жабады.</p>
+    <div class="cols">
+      <div class="card"><h3>Агент</h3><p>cron бойынша, өзі табады, өзі шешеді. Күтуге тура келеді.</p></div>
+      <div class="card"><h3>Skill</h3><p>сұрау бойынша, дәл сол процедура, дәл сол gate-тер. Қазір.</p></div>
+      <div class="card"><h3>Ортақ</h3><p>coverage, oracle, test-data, evidence — бір код, екі кіру нүктесі.</p></div>
+    </div>
+  </div>
+  <span class="counter">02 / 15</span>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Орнату</p>
+    <h2>Екі команда, логин де керек емес</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>/plugin marketplace add nurbeki1/juz40-qa-skills</span></div>
+    <div class="cmd"><span class="pr">&gt;</span><span>/plugin install juz40-qa@juz40-qa</span></div>
+    <p>Содан кейін ортаны skill өзі тексереді: репозиторийлерді іздеп табады, токен мен
+    аккаунттың күйін көреді, не жетіспейтінін айтады.</p>
+    <div class="out"><b>Нәтиже:</b> жұмысқа дайын орта немесе нақты «мынаны түзет» нұсқауы.
+    Құжат оқып, жол орнатып отыру жоқ.</div>
+  </div>
+  <span class="counter">03 / 15</span>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Қалай шақырылады</p>
+    <h2>Табиғи тілмен — процедураны өзі таңдайды</h2>
+    <div class="tablewrap tight">
+      <table>
+        <thead><tr><th>Сен айтасың</th><th>Skill ашады</th></tr></thead>
+        <tbody>
+          <tr><td>«DV-5877-ге тест-кейс жаз»</td><td class="m">spec-to-testcases</td></tr>
+          <tr><td>«осы кейстерге автотест жаз»</td><td class="m">autotest-write</td></tr>
+          <tr><td>«DV-5877-ні препродта тексер»</td><td class="m">preprod-verify</td></tr>
+          <tr><td>«бұл тест құлады, баг па?»</td><td class="m">triage</td></tr>
+          <tr><td>«баг аш»</td><td class="m">bug-report</td></tr>
+          <tr><td>«ревьюге бергенге дейін тексер»</td><td class="m">quality-gates</td></tr>
+          <tr><td>«дизайнмен сәйкес пе»</td><td class="m">figma-check</td></tr>
+          <tr><td>«препрод сынды ма»</td><td class="m">env-readiness</td></tr>
+          <tr><td>«кезекшілік есебін дайында»</td><td class="m">duty-report</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px;margin-bottom:0">Бір процедура ғана ашылады — қалған ондауы контекстті жемейді.</p>
+  </div>
+  <span class="counter">04 / 15</span>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 01</p>
+    <h2>Спекадан тест-кейс шығару</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«DV-5877-ге тест-кейс жаз»</span></div>
+    <div class="flow">
+      <div class="st"><span class="k">01</span><span class="v"><b>Талаптарды жинайды</b> <span>— Jira, Confluence, балалық және қатар беттер, бар кейс парағы</span></span></div>
+      <div class="st"><span class="k">02</span><span class="v"><b>Фактіні тексереді</b> <span>— API probe, backend DTO/enum/валидация</span></span></div>
+      <div class="st"><span class="k">03</span><span class="v"><b>Кейстерді жобалайды</b> <span>— happy path, негатив, шекара, RBAC/IDOR, күй ауысуы, регресс</span></span></div>
+      <div class="st"><span class="k">04</span><span class="v"><b>Код валидациялап жариялайды</b> <span>— әр талап кейспен жабылды ма, сілтемелер шынайы ма</span></span></div>
+    </div>
+    <div class="out"><b>Нәтиже:</b> Confluence-те трассировка кестесімен жарияланған кейс парағы + PM-ге сұрақтар тізімі.</div>
+    <div class="stop"><b>Тоқтайды:</b> спекада frozen белгісі жоқ · екі үміткер парақ табылды · спека мен факт қайшы.</div>
+  </div>
+  <span class="counter">05 / 15</span>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 02</p>
+    <h2>Кейстен Playwright автотест</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«бекітілген кейстерге API тест жаз»</span></div>
+    <div class="flow">
+      <div class="st"><span class="k">01</span><span class="v"><b>Барды қайта қолданады</b> <span>— Page Object, фикстура, API клиент; селектор дубльдемейді</span></span></div>
+      <div class="st"><span class="k">02</span><span class="v"><b>Күтілетінді спекадан алады</b> <span>— БД-дан емес; volatile id API арқылы</span></span></div>
+      <div class="st"><span class="k">03</span><span class="v"><b>Oracle талабын орындайды</b> <span>— статустан бөлек схема және бизнес-инвариант</span></span></div>
+      <div class="st"><span class="k">04</span><span class="v"><b>Gate-тен өткізеді</b> <span>— coverage, test-quality, independence, oracle</span></span></div>
+    </div>
+    <div class="out"><b>Нәтиже:</b> feature branch + Draft MR, ішінде <code>@DV</code>/<code>@TC</code> маркерленген, gate өткен тесттер.</div>
+    <div class="stop"><b>Жасамайды:</b> мерж · scope бұлыңғыр болса жазуды бастамайды · mobile scope-ты web-пен жаппайды.</div>
+  </div>
+  <span class="counter">06 / 15</span>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 03 · кезекшінің негізгі жұмысы</p>
+    <h2>Препродта тексеру және QA жабу</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«DV-5877-ні препродта тексер, жабуға бола ма»</span></div>
+    <div class="flow">
+      <div class="st"><span class="k">01</span><span class="v"><b>Scope</b> <span>— Jira-дан: API, UI немесе mobile handoff</span></span></div>
+      <div class="st"><span class="k">02</span><span class="v"><b>Орта дайындығы</b> <span>— UI artifact, auth boundary, төрт рөл аккаунты</span></span></div>
+      <div class="st"><span class="k">03</span><span class="v"><b>Арзан аудиттер</b> <span>— құласа қымбат прогон мүлде басталмайды</span></span></div>
+      <div class="st"><span class="k">04</span><span class="v"><b>Прогон және evidence</b> <span>— run, commit SHA, парақ нұсқасы, TTL 120 мин</span></span></div>
+    </div>
+    <div class="out"><b>Нәтиже:</b> тоғыз шарт бойынша нақты жауап — <b>COMPLETED</b> немесе <b>PARTIAL</b>, себебімен.</div>
+    <div class="stop"><b>Жаба алмайды:</b> бір retry-pass болса · evidence ескірсе · skipped&gt;0 болса · mobile scope қалса.</div>
+  </div>
+  <span class="counter">07 / 15</span>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 04</p>
+    <h2>Тест құлады: баг па, тест пе?</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«бұл тест құлады, себебін тап»</span></div>
+    <figure>
+      <svg viewBox="0 0 900 162" role="img" aria-label="Үш салыстыру бес вердиктке апарады: продукт багы, ескірген тест, тест қатесі, тұрақсыздық немесе белгісіздік">
+        <defs><marker id="t1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,1 9,5 0,9" fill="var(--accent)"></polygon></marker></defs>
+        <rect class="sv-acc" x="8" y="40" width="150" height="72"></rect>
+        <text class="sv-tb" x="24" y="66">ФАКТ</text>
+        <text class="sv-tm" x="24" y="86">ground.sh</text>
+        <text class="sv-tm" x="24" y="104">тірі жүйе</text>
+
+        <rect class="sv-fill" x="196" y="40" width="150" height="72"></rect>
+        <text class="sv-tb" x="212" y="66">СПЕКА</text>
+        <text class="sv-tm" x="212" y="86">Confluence</text>
+
+        <rect class="sv-fill" x="384" y="40" width="150" height="72"></rect>
+        <text class="sv-tb" x="400" y="66">ТЕСТ</text>
+        <text class="sv-tm" x="400" y="86">assertion</text>
+
+        <rect class="sv-clay" x="596" y="26" width="296" height="100"></rect>
+        <text class="sv-tb" x="614" y="50">Бес вердикт</text>
+        <text class="sv-tm" x="614" y="72">PRODUCT_BUG · STALE_TEST</text>
+        <text class="sv-tm" x="614" y="92">TEST_ERROR · FLAKY</text>
+        <text class="sv-tm" x="614" y="112">UNKNOWN → эскалация</text>
+
+        <line class="sv-la" x1="534" y1="76" x2="588" y2="76" marker-end="url(#t1)"></line>
+        <text class="sv-tm" x="8" y="22">ҮШ ДЕРЕККӨЗДІ САЛЫСТЫРАДЫ</text>
+      </svg>
+    </figure>
+    <div class="stop" style="margin-top:16px"><b>Қатаң ереже:</b> продукт спеканы бұзып тұрса, тестті «жасыл болсын» деп түзетпейді.
+    Grounding дәлелі болмаса, <code>STALE_TEST</code> деп белгілеуге тыйым.</div>
+  </div>
+  <span class="counter">08 / 15</span>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 05</p>
+    <h2>Jira баг — контракт бойынша</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«баг аш»</span></div>
+    <p class="big" style="margin-bottom:10px">Қолмен жазылған description жоқ: баг renderer арқылы жасалады, құрамы әрқашан толық.</p>
+    <ul class="plain">
+      <li><div><strong>Дубль тексерісі</strong><small>Story-дың балалық issue-лары арасынан</small></div></li>
+      <li><div><strong>Қайталанатын қадамдар</strong><small>Кемінде екі қадам, нақты object ID, көшіруге дайын curl немесе Playwright командасы</small></div></li>
+      <li><div><strong>Күтілетін + дереккөз</strong><small>Спека/контракт сілтемесі міндетті</small></div></li>
+      <li><div><strong>Нақты код аймағы</strong><small>Read-only grounding-пен табылған файл/метод</small></div></li>
+      <li><div><strong>Evidence</strong><small>Тест spec + кемінде бір тірі Allure/pipeline сілтемесі</small></div></li>
+    </ul>
+  </div>
+  <span class="counter">09 / 15</span>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 06</p>
+    <h2>Ревьюге бергенге дейінгі аудит</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«DV-5877 бойынша gate-терді тексер»</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Тексеріс</th><th>Нені ұстайды</th></tr></thead>
+        <tbody>
+          <tr><td class="m">coverage</td><td>жабылмаған кейс, жетпейтін layer, жалған трассировка</td></tr>
+          <tr><td class="m">test-quality</td><td>assertion-сыз тест, тек статус тексеретін позитив кейс</td></tr>
+          <tr><td class="m">oracle</td><td>бизнес-инварианты дәлелденбеген позитив кейс</td></tr>
+          <tr><td class="m">independence</td><td>бір-біріне тәуелді, жеке жүгірмейтін тесттер</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="out" style="margin-top:20px"><b>Неге пайдалы:</b> бұл тексерістер өз тестіңді ревьюге бергенге дейін ұстайды —
+    ревьюерден кейін емес.</div>
+  </div>
+  <span class="counter">10 / 15</span>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 07</p>
+    <h2>Дизайнмен сәйкестік және орта диагностикасы</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«дизайнмен салыстыр» · «препрод сынды ма»</span></div>
+    <div class="cols">
+      <div class="card"><h3>Figma сверкасы</h3><p>Мәтін салыстыруы бірінші — i18n, copy, батырма атауы, реттілік суретсіз табылады. Сосын құрылымдық визуал. Pixel-perfect емес.</p></div>
+      <div class="card"><h3>Орта диагностикасы</h3><p>Төрт тәуелсіз тексеріс: UI artifact, API auth, төрт рөл аккаунты, deploy метадеректері. Категория, иесі, әрекет береді.</p></div>
+    </div>
+    <div class="stop"><b>Шешім дисциплинасы:</b> спека мен дизайн қайшы болса — <code>UNKNOWN</code>, эскалация.
+    «Маған ұнамайды» баг емес: тексерілетін oracle жоқ.</div>
+  </div>
+  <span class="counter">11 / 15</span>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Мүмкіндік 08</p>
+    <h2>Кезекшілік есебі</h2>
+    <div class="cmd"><span class="pr">&gt;</span><span>«кезекшілік есебін дайында»</span></div>
+    <p class="big">Әдепкі режим — жібермеу. Алдымен мәтінді көрсетеді, растағаннан кейін ғана жібереді.</p>
+    <ul class="plain">
+      <li><div><strong>Қай DV қаралды, қай статуста</strong></div></li>
+      <li><div><strong>Қай gate өтті, қай жерде PARTIAL</strong></div></li>
+      <li><div><strong>Evidence және Allure сілтемесі</strong></div></li>
+      <li><div><strong>Ашылған және жабылған багтар</strong></div></li>
+      <li><div><strong>Не тексерілмеді және неге</strong><small>Бұл жол міндетті — есептің ең маңызды бөлігі</small></div></li>
+    </ul>
+  </div>
+  <span class="counter">12 / 15</span>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Кепілдік</p>
+    <h2>Ортаны өзі табады, шекарасын өзі айтады</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Режим</th><th>Жағдай</th><th>Не болады</th></tr></thead>
+        <tbody>
+          <tr><td class="m">FULL</td><td>репо + токен дайын</td><td>барлық 11 процедура ашық</td></tr>
+          <tr><td class="m">SETUP</td><td>дайындау керек</td><td>дайын командалар, кіруін сұрайды</td></tr>
+          <tr><td class="m">TESTS_ONLY</td><td>орkестратор репосы жоқ</td><td>тест жазу бар, <strong>gate жоқ</strong> — «тексерілді» деп жарияланбайды</td></tr>
+          <tr><td class="m">BOOTSTRAP</td><td>жаңа машина</td><td>клондау нұсқауы</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="out" style="margin-top:20px"><b>Маңыздысы:</b> gate-тер skill-де қайта жазылмады — сол детерминды код шақырылады.
+    Сондықтан адам арқылы жүрген жұмыс жалған жасыл бере алмайды.</div>
+  </div>
+  <span class="counter">13 / 15</span>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag clay">Шектеулер</p>
+    <h2>Skill нені жасамайды</h2>
+    <ul class="plain clay">
+      <li><div><strong>Мерж жасамайды</strong><small>Тек Draft MR. Мерж — адамның шешімі</small></div></li>
+      <li><div><strong>Автомат жібермейді</strong><small>Telegram/Jira жазбасы растауды сұрайды; есеп әдепкіде dry-run</small></div></li>
+      <li><div><strong>Продукт кодын өзгертпейді</strong><small>Код, БД, Elastic, Figma — тек оқу</small></div></li>
+      <li><div><strong>Болжаммен жұмыс істемейді</strong><small>Дереккөз жоқ немесе қайшы болса — UNKNOWN, эскалация</small></div></li>
+      <li><div><strong>Mobile мен exploratory-ды алмастырмайды</strong><small>Handoff деп белгілейді, жасырмайды</small></div></li>
+    </ul>
+  </div>
+  <span class="counter">14 / 15</span>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <div class="inner">
+    <p class="tag">Пилот</p>
+    <h2>Бір апта, бір DV, үш адам</h2>
+    <div class="stats">
+      <div class="stat"><span class="n">3</span><span class="l">кезекші: Нұрбек, Ерасыл, Алпамыс</span></div>
+      <div class="stat"><span class="n">1</span><span class="l">DV толық цикл: кейс → тест → препрод → есеп</span></div>
+      <div class="stat"><span class="n">11</span><span class="l">процедура сынақтан өтеді</span></div>
+    </div>
+    <p style="margin-top:26px">Пилоттан күтетініміз — қай жерде тоқтап қалғаны. Процедура мәтіні сол
+    фидбекпен нақтыланады; gate-тер өзгермейді.</p>
+    <div class="meta"><span>/plugin marketplace add nurbeki1/juz40-qa-skills</span><span>19.11.2026</span></div>
+  </div>
+  <span class="counter">15 / 15</span>
+</section>
+
+<script>
+  (function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var rail = document.getElementById('rail');
+    function progress() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      rail.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', progress, { passive: true });
+    window.addEventListener('resize', progress);
+    progress();
+    function current() {
+      var best = 0, bestDist = Infinity;
+      slides.forEach(function (s, i) {
+        var d = Math.abs(s.getBoundingClientRect().top);
+        if (d < bestDist) { bestDist = d; best = i; }
+      });
+      return best;
+    }
+    document.addEventListener('keydown', function (e) {
+      var i = current(), next = i;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') next = i + 1;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') next = i - 1;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = slides.length - 1;
+      else return;
+      e.preventDefault();
+      next = Math.max(0, Math.min(slides.length - 1, next));
+      slides[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+</script>
